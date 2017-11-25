@@ -163,9 +163,11 @@ xcopy /E /Y "$(SolutionDir)Content" "$(OutDir)Content"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TicTacToe.ConsoleApplication.cpp" />
+    <ClCompile Include="TriStateGameBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TriStateGameBoard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

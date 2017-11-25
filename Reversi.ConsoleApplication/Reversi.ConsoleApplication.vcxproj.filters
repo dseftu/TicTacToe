@@ -21,9 +21,15 @@
     <ClCompile Include="TicTacToe.ConsoleApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TriStateGameBoard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TriStateGameBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
