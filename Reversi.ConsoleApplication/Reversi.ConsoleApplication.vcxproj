@@ -24,6 +24,7 @@
     <ProjectGuid>{272E6BB5-70E6-4960-B8A3-5655764C16D7}</ProjectGuid>
     <RootNamespace>ReversiConsoleApplication</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <ProjectName>TicTacToe.ConsoleApplication</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -161,7 +162,7 @@ xcopy /E /Y "$(SolutionDir)Content" "$(OutDir)Content"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Reversi.ConsoleApplication.cpp" />
+    <ClCompile Include="TicTacToe.ConsoleApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
