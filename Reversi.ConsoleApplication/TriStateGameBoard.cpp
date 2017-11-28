@@ -15,7 +15,7 @@ namespace TicTacToe
 
 	void TicTacToe::TriStateGameBoard::Print()
 	{
-		cout << "printing..." << endl;
+		cout << "0=" << mBoard[0] << " 1=" << mBoard[1] << endl;
 		for (int16_t row = 1; row <= GetRowsCount(); row++)
 		{
 			
@@ -36,50 +36,60 @@ namespace TicTacToe
 		// need to know the position of the bit pair on the map
 		// should be (row number * column number) - (number of total columns - column number)
 		// So, row 3, col 5 = 21st bit pair
-		int16_t bitPair = GetBitPair(row, col);
+		uint16_t bitPair = GetBitPair(row, col);
 
 		// from this we can get the actual index in the board array
 		// (sizeof() is multiplied by 4 to account for the number of bit pairs in a byte
 		int16_t index = (bitPair-1) / (sizeof(int16_t)*4);
-		uint16_t player1mask = 1 << (bitPair - 2) % (sizeof(int16_t) * 8);
-		uint16_t player2mask = 2 << (bitPair - 2) % (sizeof(int16_t) * 8);
+		uint16_t player1mask = 1 << (bitPair*2-2) % (sizeof(int16_t) * 8);
+		uint16_t player2mask = 2 << (bitPair*2-2) % (sizeof(int16_t) * 8);
 		
 		if (mBoard[index] & player1mask) return BoardState::Player1;
 		if (mBoard[index] & player2mask) return BoardState::Player2;
 		return BoardState::Empty;
 		
 	}
-	void TriStateGameBoard::SetBoardState(int16_t row, int16_t col, BoardState state)
+	bool TriStateGameBoard::SetBoardState(int16_t row, int16_t col, BoardState state)
 	{
+		// if this state is occupied and the state we are trying to set isn't empty, this fails
+		if (row < 1 
+			|| col < 1 
+			|| row > GetRowsCount() 
+			|| col > GetColsCount() 
+			|| (GetBoardState(row, col) != BoardState::Empty && state != BoardState::Empty)) return false;
+
 		// need to know the position of the bit pair on the map
 		// should be (row number * column number) - (number of total columns - column number)
 		// So, row 3, col 5 = 21st bit pair
-		int16_t bitPair = GetBitPair(row,col);
+		uint16_t bitPair = GetBitPair(row,col);
 
 		// from this we can get the actual index in the board array
 		// (sizeof() is multiplied by 4 to account for the number of bit pairs in a byte
 		int16_t index = (bitPair - 1) / (sizeof(int16_t) * 4);
-
 		uint16_t mask = 0;
-		uint16_t unmask = 3 << (bitPair - 2) % (sizeof(int16_t) * 8);
+		uint16_t unmask = 3 << ((bitPair * 2) - 2) % (sizeof(int16_t) * 8);
+				
 		mBoard[index] = (mBoard[index] | unmask) ^ unmask;
+
 		switch (state)
 		{
 		case TicTacToe::Player1:
-			mask = 1 << (bitPair - 2) % (sizeof(int16_t) * 8);
+			mask = 1 << (bitPair*2-2) % (sizeof(int16_t) * 8);
 			break;
 		case TicTacToe::Player2:
-			mask = 2 << (bitPair - 2) % (sizeof(int16_t) * 8);
+			mask = 2 << (bitPair*2-2) % (sizeof(int16_t) * 8);
 			break;
 		case TicTacToe::Empty:
-			return;
+			return true;
 		default:
 			break;
 		}
 		mBoard[index] = mBoard[index] | mask;
+
+		return true;
 		
 	}
-	int16_t TriStateGameBoard::GetBitPair(int16_t row, int16_t col)
+	uint16_t TriStateGameBoard::GetBitPair(int16_t row, int16_t col)
 	{
 		return (row * GetColsCount()) - (GetColsCount() - col);
 	}

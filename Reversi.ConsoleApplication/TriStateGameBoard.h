@@ -23,7 +23,7 @@ namespace TicTacToe
 		void Print();
 
 		BoardState GetBoardState(int16_t row, int16_t col);
-		void SetBoardState(int16_t row, int16_t col, BoardState state);		
+		bool SetBoardState(int16_t row, int16_t col, BoardState state);		
 
 		//evalute game board from perspective of given player
 		float EvaluateGameBoard(BoardState player);
@@ -41,7 +41,7 @@ namespace TicTacToe
 		void SetColsCount(int16_t cols) { mColsCount = cols; };
 
 	private:
-		int16_t GetBitPair(int16_t row, int16_t col);
+		uint16_t GetBitPair(int16_t row, int16_t col);
 		char mPlayer1Icon = 'X';
 		char mPlayer2Icon = 'O';
 		char mEmptyIcon = ' ';

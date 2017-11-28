@@ -15,21 +15,26 @@ int main(int argc, char* argv[])
 	TicTacToe::BoardState currentPlayer = TicTacToe::BoardState::Player1;
 	while (board.GetWinner() == TicTacToe::BoardState::Empty)
 	{
-		int16_t row, col;
+		int16_t row = -1;
+		int16_t col = -1;
 		if (currentPlayer == TicTacToe::BoardState::Player1)
 		{
-			cout << "Player 1> ";
-			cin >> row >> col;
-			cout << endl;
-			board.SetBoardState(row, col, currentPlayer);
+			while (!board.SetBoardState(row, col, currentPlayer))
+			{
+				cout << "Player 1> ";
+				cin >> row >> col;
+				cout << endl;
+			}
 			currentPlayer = TicTacToe::BoardState::Player2;
 		}
 		else
 		{
-			cout << "Player 2> ";
-			cin >> row >> col;
-			cout << endl;
-			board.SetBoardState(row, col, currentPlayer);
+			while (!board.SetBoardState(row, col, currentPlayer))
+			{
+				cout << "Player 2> ";
+				cin >> row >> col;
+				cout << endl;
+			}
 			currentPlayer = TicTacToe::BoardState::Player1;
 		}
 		board.Print();
