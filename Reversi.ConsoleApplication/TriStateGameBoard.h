@@ -50,6 +50,10 @@ namespace TicTacToe
 		int16_t mColsCount = 0;
 		vector<uint16_t> mBoard;
 		char BoardStateToChar(BoardState b);
+		BoardState CompareStatesInRow(const int16_t x[], const int16_t y[], const int16_t n);
+		const int16_t mWinCheckX[8][3] = { { 1,1,1 },{ 2,2,2 },{ 3,3,3 },{ 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 3,2,1 } };
+		const int16_t mWinCheckY[8][3] = { { 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 1,1,1 },{ 2,2,2 },{ 3,3,3 },{ 1,2,3 },{ 1,2,3 } };
+		const int16_t mNumWinways = 8;
 
 	};
 }

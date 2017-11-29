@@ -108,6 +108,28 @@ namespace TicTacToe
 			break;
 		}
 	}
+	BoardState TriStateGameBoard::CompareStatesInRow(const int16_t x[], const int16_t y[], const int16_t n)
+	{
+		assert(n > 1);
+
+		BoardState theState = GetBoardState(x[0], y[0]);
+
+		if (theState == BoardState::Empty) return BoardState::Empty;
+		else
+		{
+			for (int16_t i = 1; i < n; i++)
+			{
+				if (GetBoardState(x[i], y[i]) == BoardState::Empty ||
+					GetBoardState(x[i], y[i]) != theState)
+				{
+					return BoardState::Empty;
+				}
+			}			
+		}
+
+		return theState;
+		
+	}
 	float TriStateGameBoard::EvaluateGameBoard(BoardState player)
 	{
 		UNREFERENCED_PARAMETER(player);
@@ -115,29 +137,13 @@ namespace TicTacToe
 	}
 	BoardState TriStateGameBoard::GetWinner()
 	{
-		BoardState winner = BoardState::Empty;
-
-		for (int16_t row = 1; row <= GetRowsCount(); row++)
+		
+		
+		for (int16_t i = 0; i < mNumWinways; i++)
 		{
-			for (int16_t col = 1; col <= GetColsCount(); col++)
-			{
-				BoardState tempBoardState = GetBoardState(row, col);
-
-				if (tempBoardState == BoardState::Empty)
-				{
-					winner = BoardState::Empty;
-					break;
-				}
-				// if winner is empty, then set it.  otherwise, check it.
-				else if (winner == BoardState::Empty) winner = tempBoardState;
-				else if (tempBoardState != winner)
-				{ 
-					winner = BoardState::Empty;
-					break;
-				}
-			}
+			BoardState theState = CompareStatesInRow(mWinCheckX[i], mWinCheckY[i], GetRowsCount());
+			if (theState != BoardState::Empty) return theState;
 		}
-
-		return winner;
+		return BoardState::Empty;
 	}
 }

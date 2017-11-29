@@ -56,12 +56,8 @@ int main(int argc, char* argv[])
 	default:
 		break;
 	}
-	if (board.GetWinner() != TicTacToe::BoardState::Empty)
-	{
-
-		
-	}
-	
+	string input;
+	cin >> input;
 
 	return 0;
 }
