@@ -105,10 +105,30 @@ namespace TicTacToe
 			if (maximizngPlayer && newValue >= bestValue) bestValue = newValue;
 			if (!maximizngPlayer && newValue <= bestValue) bestValue = newValue;
 		}
-		return bestValue;
-		
+		return bestValue;	
 		
 	}
+	float TriStateGameBoard::MiniMaxAB(TriStateGameBoard board, float alpha, float beta, BoardState player, bool maximizngPlayer)
+	{
+		if (board.IsTerminalNode()) return board.EvaluateGameBoard(player);
+		float bestValue = 100;
+		if (maximizngPlayer) bestValue = -100;
+
+		vector<TriStateGameBoard> newBoards = board.GetFutureBoards(player);
+		for each (TriStateGameBoard newBoard in newBoards)
+		{
+			float newValue = MiniMaxAB(newBoard, alpha, beta, GetOtherPlayer(player), !maximizngPlayer);
+			if (maximizngPlayer && newValue >= bestValue) bestValue = newValue;
+			if (maximizngPlayer && newValue >= alpha) alpha = newValue;
+
+			if (!maximizngPlayer && newValue <= bestValue) bestValue = newValue;
+			if (!maximizngPlayer && newValue <= beta) beta = newValue;
+
+			if (beta <= alpha) break;
+		}
+		return bestValue;
+	}
+
 	void TriStateGameBoard::DetermineBestBoardMove(BoardState player, int16_t & row, int16_t & col)
 	{
 		assert(!IsTerminalNode());
@@ -119,7 +139,7 @@ namespace TicTacToe
 
 		for each (TriStateGameBoard newBoard in newBoards)
 		{
-			float newValue = MiniMax(newBoard, player, true);
+			float newValue = MiniMaxAB(newBoard, -100.0f, -100.0f, player, true);
 			if (newValue > bestValue)
 			{
 				bestValue = newValue;
@@ -127,7 +147,6 @@ namespace TicTacToe
 				col = newBoard.GetLastColMove();
 			}
 		}
-
 	}
 	uint16_t TriStateGameBoard::GetBitPair(int16_t row, int16_t col)
 	{
