@@ -30,7 +30,7 @@ namespace TicTacToe
 
 		// this needs to return a vector of possible game states from this position, given
 		// a particular players turn
-		shared_ptr<vector<TriStateGameBoard>> GetFutureBoards;
+		vector<TriStateGameBoard> GetFutureBoards(BoardState player);
 
 		BoardState GetWinner();
 		BoardState GetCurrentPlayer() { return mCurrentPlayer; };
@@ -39,6 +39,10 @@ namespace TicTacToe
 		void SetRowsCount(int16_t rows) { mRowsCount = rows; };
 		int16_t GetColsCount() { return mColsCount; };
 		void SetColsCount(int16_t cols) { mColsCount = cols; };
+		int16_t GetLastRowMove() { return mLastRowMove; };
+		int16_t GetLastColMove() { return mLastColMove; };
+		float MiniMax(TriStateGameBoard board, BoardState player, bool maximizngPlayer);
+		void DetermineBestBoardMove(BoardState player, int16_t& row, int16_t& col);
 
 	private:
 		uint16_t GetBitPair(int16_t row, int16_t col);
@@ -54,6 +58,12 @@ namespace TicTacToe
 		const int16_t mWinCheckX[8][3] = { { 1,1,1 },{ 2,2,2 },{ 3,3,3 },{ 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 3,2,1 } };
 		const int16_t mWinCheckY[8][3] = { { 1,2,3 },{ 1,2,3 },{ 1,2,3 },{ 1,1,1 },{ 2,2,2 },{ 3,3,3 },{ 1,2,3 },{ 1,2,3 } };
 		const int16_t mNumWinways = 8;
+		TriStateGameBoard CopyBoard(TriStateGameBoard board);
+		bool IsTerminalNode();
+		int16_t mLastRowMove = 0;
+		int16_t mLastColMove = 0;
+		int16_t mBoardValue = 0;
+		BoardState GetOtherPlayer(BoardState player);
 
 	};
 }

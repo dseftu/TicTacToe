@@ -15,7 +15,6 @@ namespace TicTacToe
 
 	void TicTacToe::TriStateGameBoard::Print()
 	{
-		cout << "0=" << mBoard[0] << " 1=" << mBoard[1] << endl;
 		for (int16_t row = 1; row <= GetRowsCount(); row++)
 		{
 			
@@ -86,8 +85,49 @@ namespace TicTacToe
 		}
 		mBoard[index] = mBoard[index] | mask;
 
+
+		mLastRowMove = row;
+		mLastColMove = col;		
+
 		return true;
 		
+	}
+	float TriStateGameBoard::MiniMax(TriStateGameBoard board, BoardState player, bool maximizngPlayer)
+	{
+		if (board.IsTerminalNode()) return board.EvaluateGameBoard(player);
+		float bestValue = 100;
+		if (maximizngPlayer) bestValue = -100;
+
+		vector<TriStateGameBoard> newBoards = board.GetFutureBoards(player);
+		for each (TriStateGameBoard newBoard in newBoards)
+		{
+			float newValue = MiniMax(newBoard, GetOtherPlayer(player), !maximizngPlayer);
+			if (maximizngPlayer && newValue >= bestValue) bestValue = newValue;
+			if (!maximizngPlayer && newValue <= bestValue) bestValue = newValue;
+		}
+		return bestValue;
+		
+		
+	}
+	void TriStateGameBoard::DetermineBestBoardMove(BoardState player, int16_t & row, int16_t & col)
+	{
+		assert(!IsTerminalNode());
+
+		vector<TriStateGameBoard> newBoards = GetFutureBoards(player);
+		
+		float bestValue = -100;
+
+		for each (TriStateGameBoard newBoard in newBoards)
+		{
+			float newValue = MiniMax(newBoard, player, true);
+			if (newValue > bestValue)
+			{
+				bestValue = newValue;
+				row = newBoard.GetLastRowMove();
+				col = newBoard.GetLastColMove();
+			}
+		}
+
 	}
 	uint16_t TriStateGameBoard::GetBitPair(int16_t row, int16_t col)
 	{
@@ -130,15 +170,78 @@ namespace TicTacToe
 		return theState;
 		
 	}
+	TriStateGameBoard TriStateGameBoard::CopyBoard(TriStateGameBoard board)
+	{
+		TriStateGameBoard newBoard = TriStateGameBoard(board.GetRowsCount(), board.GetColsCount());
+
+		for (int16_t row = 1; row <= GetRowsCount(); row++)
+		{
+			for (int16_t col = 1; col <= GetColsCount(); col++)
+			{
+				newBoard.SetBoardState(row, col, board.GetBoardState(row, col));
+			}
+		}
+
+		return newBoard;
+	}
+	bool TriStateGameBoard::IsTerminalNode()
+	{
+		// check for winner
+		if (GetWinner() != BoardState::Empty) return true;
+
+		// check to see if there is anywhere else to place a piece
+		vector<TriStateGameBoard> testBoards = GetFutureBoards(BoardState::Player1);
+		if (testBoards.size() == 0) return true;
+
+		// the above is false, so this is not a terminal node
+		return false;
+	}
+	BoardState TriStateGameBoard::GetOtherPlayer(BoardState player)
+	{
+		if (player == BoardState::Player1) return BoardState::Player2;
+		return BoardState::Player1;
+	}
 	float TriStateGameBoard::EvaluateGameBoard(BoardState player)
 	{
-		UNREFERENCED_PARAMETER(player);
-		return 0.0f;
+		if (GetWinner() == player)
+		{
+			return 1.0f;
+		}
+		else if (GetWinner() == BoardState::Empty)
+		{
+			return 0.0f;
+		}
+		else
+		{
+			return -1.0f;
+		}
+		
 	}
-	BoardState TriStateGameBoard::GetWinner()
+	vector<TriStateGameBoard> TriStateGameBoard::GetFutureBoards(BoardState player)
 	{
-		
-		
+		vector<TriStateGameBoard> newBoards;
+
+		for (int16_t row = 1; row <= GetRowsCount(); row++)
+		{
+			for (int16_t col = 1; col <= GetColsCount(); col++)
+			{
+				if (GetBoardState(row, col) == BoardState::Empty)
+				{
+					// this is a potential new spot.
+					
+					TriStateGameBoard newBoard = CopyBoard((*this));
+					newBoard.SetBoardState(row, col, player);
+
+					newBoards.push_back(newBoard);
+				}
+			}
+		}
+		return newBoards;
+	}
+
+
+	BoardState TriStateGameBoard::GetWinner()
+	{	
 		for (int16_t i = 0; i < mNumWinways; i++)
 		{
 			BoardState theState = CompareStatesInRow(mWinCheckX[i], mWinCheckY[i], GetRowsCount());

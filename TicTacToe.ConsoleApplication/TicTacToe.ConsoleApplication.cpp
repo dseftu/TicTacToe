@@ -11,17 +11,20 @@ int main(int argc, char* argv[])
 	UNREFERENCED_PARAMETER(argv);
 
 	TicTacToe::TriStateGameBoard board = TicTacToe::TriStateGameBoard(3, 3);
-
+	
 	TicTacToe::BoardState currentPlayer = TicTacToe::BoardState::Player1;
+	board.GetFutureBoards(currentPlayer);
 	while (board.GetWinner() == TicTacToe::BoardState::Empty)
 	{
+		
 		int16_t row = -1;
 		int16_t col = -1;
 		if (currentPlayer == TicTacToe::BoardState::Player1)
 		{
 			while (!board.SetBoardState(row, col, currentPlayer))
 			{
-				cout << "Player 1> ";
+				board.Print();
+				cout << "Player 1 (enter row, then column)> ";
 				cin >> row >> col;
 				cout << endl;
 			}
@@ -31,16 +34,16 @@ int main(int argc, char* argv[])
 		{
 			while (!board.SetBoardState(row, col, currentPlayer))
 			{
-				cout << "Player 2> ";
-				cin >> row >> col;
-				cout << endl;
+				cout << "AI is thinking..." << endl;
+				board.DetermineBestBoardMove(currentPlayer, row, col);
+				cout << "Ah ha!" << endl << endl;
 			}
 			currentPlayer = TicTacToe::BoardState::Player1;
 		}
-		board.Print();
+		
 		
 	}
-
+	board.Print();
 	TicTacToe::BoardState winner = board.GetWinner();
 	switch (winner)
 	{
