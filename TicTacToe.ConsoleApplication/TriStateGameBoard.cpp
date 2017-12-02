@@ -139,7 +139,8 @@ namespace TicTacToe
 
 		for each (TriStateGameBoard newBoard in newBoards)
 		{
-			float newValue = MiniMaxAB(newBoard, -100.0f, -100.0f, player, true);
+			float newValue = MiniMaxAB(newBoard, -100.0f, 100.0f, player, true);
+			
 			if (newValue > bestValue)
 			{
 				bestValue = newValue;
